@@ -30,6 +30,25 @@ Cieľom procesu ELT bolo pripraviť údaje na transformáciu a následnú analý
 
 ---
 
+## **2\. Dimenzionálny model **
+
+Pre účely analýzy spotrebiteľských transakcií v reštauráciách typu Fast Food a Quick Service bol navrhnutý hviezdicový model (star schema) podľa Kimballovej metodológie. Model obsahuje jednu faktovú tabuľku a štyri dimenzie, ktoré poskytujú kompletný kontext pre každú transakciu:
+ - dim_cardholder – obsahuje údaje o držiteľovi karty, ako je generácia, segmentačný typ (persona), mesto, štát, poštové smerovacie číslo a dĺžka vzťahu k banke (vintage). Vzťah k faktovej tabuľke je 1:N, SCD typu 1, keďže demografické a základné segmentačné údaje sa nemenia často.
+ - dim_merchant – obsahuje údaje o obchode, kde sa transakcia uskutočnila: názov, kategórie obchodu na rôznych úrovniach, mesto, štát, MSA a poštové smerovacie číslo. Vzťah k faktovej tabuľke je 1:N, SCD typu 1.
+ - dim_payment – obsahuje údaje o platobnej karte: identifikátor platby, názov platobnej metódy a typ karty (debetná/kreditná). Vzťah k faktovej tabuľke je 1:N, SCD typu 1, keďže typ platby je stabilný.
+ - dim_date – obsahuje časové charakteristiky dátumu transakcie: dátum, rok, mesiac a deň. Vzťah k faktovej tabuľke je 1:N, SCD typu 0, pretože dátum je statický a nemení sa.
+ - fact_transactions – obsahuje jednotlivé transakcie ako záznamy na úrovni jednej transakcie. Primárnym kľúčom je transaction_id, tabuľka obsahuje cudzie kľúče na všetky dimenzie a hlavné metriky: gross_transaction_amount,   card_holder_average_ltm_spend, card_holder_average_ltm_transaction_count, card_holder_total_spend, card_holder_total_transaction_count, consistent_shopper a indikátor, či bola karta fyzicky prítomná. Okrem toho obsahuje aj analytický stĺpec transaction_sequence_number, ktorý určuje poradie nákupov každého držiteľa karty pomocou window funkcie ROW_NUMBER(). Tento stĺpec umožňuje sledovať opakované nákupy a analyzovať nákupné správanie zákazníkov.
+
+Prepojenie faktovej tabuľky a dimenzií
+Faktová tabuľka je centrom hviezdice, pričom každá dimenzia poskytuje kontext pre transakciu:
+cardholder_id → dim_cardholder
+merchant_id → dim_merchant
+payment_id → dim_payment
+transaction_date → dim_date
+
+![ Alt text](./img/2.png)
+
+---
 ## **3\. ELT proces v Snowflake**
 
 ELT proces pozostáva z troch hlavných fáz: extrahovanie (Extract), načítanie (Load) a transformácia (Transform). Tento proces som implementoval v Snowflake s cieľom pripraviť zdrojové dáta zo staging vrstvy do viacdimenzionálneho modelu typu hviezda vhodného na analýzu a vizualizáciu.
