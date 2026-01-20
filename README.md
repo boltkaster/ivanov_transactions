@@ -11,14 +11,14 @@ Projekt podporuje viaceré kľúčové biznis procesy:
 Údaje pochádzajú z [**Credit/Debit Transactions: Fast Food and Quick Service Restaurants**](https://app.snowflake.com/marketplace/listing/GZSTZ708I0X/facteus-credit-debit-transactions-fast-food-and-quick-service-restaurants?categorySecondary=%5B%226%22%5D&pricing=free).
 
 V tabuľke nájdete informácie ako:
- GROSS_TRANSACTION_AMOUNT – celková hodnota každej transakcie
- TRANSACTION_DATE – dátum a presný čas nákupu
- MERCHANT_NAME – názov reštaurácie alebo prevádzky
- MERCHANT_CATEGORY_CODE – typ a kategória obchodu
- MERCHANT_POSTAL_CODE – lokalita prevádzky
- CARD_HOLDER_GENERATION – veková kategória zákazníka
- CARD_HOLDER_POSTAL_CODE – približná geografická poloha zákazníka
- CARD_PRESENT_INDICATOR – indikátor online vs. osobnej transakcie
+ - GROSS_TRANSACTION_AMOUNT – celková hodnota každej transakcie
+ - TRANSACTION_DATE – dátum a presný čas nákupu
+ - MERCHANT_NAME – názov reštaurácie alebo prevádzky
+ - MERCHANT_CATEGORY_CODE – typ a kategória obchodu
+ - MERCHANT_POSTAL_CODE – lokalita prevádzky
+ - CARD_HOLDER_GENERATION – veková kategória zákazníka
+ - CARD_HOLDER_POSTAL_CODE – približná geografická poloha zákazníka
+ - CARD_PRESENT_INDICATOR – indikátor online vs. osobnej transakcie
 
 Cieľom procesu ELT bolo pripraviť údaje na transformáciu a následnú analýzu.
 
