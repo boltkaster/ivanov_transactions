@@ -24,6 +24,6 @@ Cieľom procesu ELT bolo pripraviť údaje na transformáciu a následnú analý
 
 **1.1 Dátová architektúra**
 
-![ Alt text](./img/erd_schema.png)
+![ Alt text](./img/1)
 
 ---
