@@ -46,6 +46,11 @@ merchant_id → dim_merchant
 payment_id → dim_payment
 transaction_date → dim_date
 
+ - dim_cardholder je navrhnutá ako SCD Typ 1, keďže demografické a segmentačné údaje zákazníkov (napr. generácia alebo lokalita) sa môžu v čase meniť, no historické hodnoty v tomto projekte neuchovávame a pri zmene sú prepísané.
+ - dim_merchant je taktiež SCD Typ 1, pretože zmeny názvu alebo kategórie obchodníka nie je potrebné historizovať.
+ - dim_payment je SCD Typ 1, keďže typ platby a typ karty predstavujú aktuálny stav.
+ - dim_date je SCD Typ 0, keďže dátumové atribúty (rok, mesiac, deň) sú nemenné a nevyžadujú aktualizácie.
+
 ![ Alt text](./img/2.png)
 
 ---
