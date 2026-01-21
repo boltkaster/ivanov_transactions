@@ -299,7 +299,7 @@ GROUP BY p.payment_name;
 
 ---
 
-**Graf 4: Počet vodných tokov podľa kategórie hydro uzlov**  
+**Graf 4: Rozdelenie obratu podľa generácie zákazníkov**  
 Vizualizácia znázorňuje podiel jednotlivých vekových skupín na celkových tržbách. Výsledky sú vhodné pre marketingové cielenie a segmentáciu zákazníkov.
 ```sql
 SELECT
@@ -310,7 +310,7 @@ JOIN dim_cardholder c ON f.cardholder_id = c.cardholder_id
 GROUP BY c.card_holder_generation;
 
 ```
-![ Alt text](./img/graph5.png)
+![ Alt text](./img/graph4.png)
 
 ---
 
@@ -324,6 +324,6 @@ FROM fact_transactions
 GROUP BY transaction_sequence_number
 ORDER BY transaction_sequence_number;
 ```
-![ Alt text](./img/graph4.png)
+![ Alt text](./img/graph5.png)
 
 **Autor:** Volodymyr Ivanov
