@@ -30,7 +30,7 @@ Cieľom procesu ELT bolo pripraviť údaje na transformáciu a následnú analý
 
 ---
 
-## **2\. Dimenzionálny model **
+## **2\. Dimenzionálny model**
 
 Pre účely analýzy spotrebiteľských transakcií v reštauráciách typu Fast Food a Quick Service bol navrhnutý hviezdicový model (star schema) podľa Kimballovej metodológie. Model obsahuje jednu faktovú tabuľku a štyri dimenzie, ktoré poskytujú kompletný kontext pre každú transakciu:
  - dim_cardholder – obsahuje údaje o držiteľovi karty, ako je generácia, segmentačný typ (persona), mesto, štát, poštové smerovacie číslo a dĺžka vzťahu k banke (vintage). Vzťah k faktovej tabuľke je 1:N, SCD typu 1, keďže demografické a základné segmentačné údaje sa nemenia často.
@@ -251,7 +251,7 @@ SELECT
 FROM fact_transactions;
 ```
 ---
-## **4 Vizualizácia dát**
+## **4. Vizualizácia dát**
 
 **Graf 1: Vývoj celkového obratu v čase**  
 Graf zobrazuje vývoj spotrebiteľských výdavkov v QSR segmente počas sledovaného obdobia. Je možné identifikovať rastové alebo poklesové trendy, sezónnosť a obdobia zvýšenej spotreby.
