@@ -173,11 +173,11 @@ Faktová tabuľka fact_transactions obsahuje iba merateľné hodnoty a cudzie k�
 
 **Window funkcia**
 V fact_transactions bola použitá window funkcia ROW_NUMBER():
-ROW_NUMBER() OVER (PARTITION BY cardholder_id ORDER BY transaction_date) AS transaction_sequence_number
-Slúži na určenie poradia transakcií každého zákazníka
-Umožňuje analýzu nákupného správania, napr. identifikovať prvý nákup, opakované nákupy alebo lojalitu zákazníka
-Partition podľa cardholder_id znamená, že poradie sa počíta samostatne pre každého držiteľa karty
-Order podľa transaction_date zabezpečuje chronologické zoradenie transakcií
+ROW_NUMBER() OVER (PARTITION BY cardholder_id ORDER BY transaction_date) AS transaction_sequence_number.
+Slúži na určenie poradia transakcií každého zákazníka.
+ Umožňuje analýzu nákupného správania, napr. identifikovať prvý nákup, opakované nákupy alebo lojalitu zákazníka.
+ Partition podľa cardholder_id znamená, že poradie sa počíta samostatne pre každého držiteľa karty.
+ Order podľa transaction_date zabezpečuje chronologické zoradenie transakcií.
 
 **Kód:**
 ```sql
@@ -249,7 +249,85 @@ SELECT
         ORDER BY transaction_date
     ) AS transaction_sequence_number
 FROM fact_transactions;
-
-
 ```
 ---
+## **4 Vizualizácia dát**
+
+![ Alt text](./img/uk_waters.png)
+
+---
+
+**Graf 1: Vývoj celkového obratu v čase**  
+Graf zobrazuje vývoj spotrebiteľských výdavkov v QSR segmente počas sledovaného obdobia. Je možné identifikovať rastové alebo poklesové trendy, sezónnosť a obdobia zvýšenej spotreby.
+```sql
+SELECT
+    d.year,
+    d.month,
+    SUM(f.gross_transaction_amount) AS total_revenue
+FROM fact_transactions f
+JOIN dim_date d ON f.transaction_date = d.transaction_date
+GROUP BY d.year, d.month
+ORDER BY d.year, d.month;
+```
+![ Alt text](./img/graph1.png)
+
+---
+
+**Graf 2: Najvýznamnejší obchodníci podľa obratu**  
+Vizualizácia poukazuje na dominantných hráčov v segmente rýchleho občerstvenia. Výsledky môžu byť použité na analýzu trhového postavenia jednotlivých značiek.
+```sql
+SELECT
+    m.merchant_name,
+    SUM(f.gross_transaction_amount) AS total_revenue
+FROM fact_transactions f
+JOIN dim_merchant m ON f.merchant_id = m.merchant_id
+GROUP BY m.merchant_name
+ORDER BY total_revenue DESC
+LIMIT 10;
+```
+![ Alt text](./img/graph2.png)
+
+---
+
+**Graf 3: Priemerná hodnota transakcie podľa typu platby**  
+Graf ukazuje rozdiely v správaní zákazníkov podľa spôsobu platby. Napríklad kreditné karty môžu mať vyššiu priemernú hodnotu transakcie než debetné.
+```sql
+SELECT
+    p.payment_name,
+    AVG(f.gross_transaction_amount) AS avg_transaction_value
+FROM fact_transactions f
+JOIN dim_payment p ON f.payment_id = p.payment_id
+GROUP BY p.payment_name;
+```
+![ Alt text](./img/graph3.png)
+
+---
+
+**Graf 4: Počet vodných tokov podľa kategórie hydro uzlov**  
+Vizualizácia znázorňuje podiel jednotlivých vekových skupín na celkových tržbách. Výsledky sú vhodné pre marketingové cielenie a segmentáciu zákazníkov.
+```sql
+SELECT
+    c.card_holder_generation,
+    SUM(f.gross_transaction_amount) AS total_revenue
+FROM fact_transactions f
+JOIN dim_cardholder c ON f.cardholder_id = c.cardholder_id
+GROUP BY c.card_holder_generation;
+
+```
+![ Alt text](./img/graph4.png)
+
+---
+
+**Graf 5: Opakované nákupy zákazníkov (lojalita)**  
+Graf vychádza z window funkcie ROW_NUMBER() a umožňuje analyzovať lojalitu zákazníkov. Je možné identifikovať, koľko zákazníkov uskutoční iba jeden nákup a koľko sa vracia opakovane.
+```sql
+SELECT
+    transaction_sequence_number,
+    COUNT(*) AS transaction_count
+FROM fact_transactions
+GROUP BY transaction_sequence_number
+ORDER BY transaction_sequence_number;
+```
+![ Alt text](./img/graph4.png)
+
+**Autor:** Volodymyr Ivanov
