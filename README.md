@@ -26,6 +26,8 @@ Cieľom procesu ELT bolo pripraviť údaje na transformáciu a následnú analý
 
 **1.1 Dátová architektúra**
 
+Diagram nižšie znázorňuje ERD pôvodnej dátovej štruktúry zdrojového datasetu, ktorý je dostupný vo forme denormalizovaného view a obsahuje všetky atribúty potrebné pre následnú transformáciu do dimenzionálneho modelu.
+
 ![ Alt text](./img/1.png)
 
 ---
@@ -39,17 +41,16 @@ Pre účely analýzy spotrebiteľských transakcií v reštauráciách typu Fast
  - dim_date – obsahuje časové charakteristiky dátumu transakcie: dátum, rok, mesiac a deň. Vzťah k faktovej tabuľke je 1:N, SCD typu 0, pretože dátum je statický a nemení sa.
  - fact_transactions – obsahuje jednotlivé transakcie ako záznamy na úrovni jednej transakcie. Primárnym kľúčom je transaction_id, tabuľka obsahuje cudzie kľúče na všetky dimenzie a hlavné metriky: gross_transaction_amount,   card_holder_average_ltm_spend, card_holder_average_ltm_transaction_count, card_holder_total_spend, card_holder_total_transaction_count, consistent_shopper a indikátor, či bola karta fyzicky prítomná. Okrem toho obsahuje aj analytický stĺpec transaction_sequence_number, ktorý určuje poradie nákupov každého držiteľa karty pomocou window funkcie ROW_NUMBER(). Tento stĺpec umožňuje sledovať opakované nákupy a analyzovať nákupné správanie zákazníkov.
 
+Dimenzie boli navrhnuté s ohľadom na Slowly Changing Dimensions:
+ - dim_cardholder, dim_merchant a dim_payment sú implementované ako SCD Typ 1, pretože historické zmeny ich atribútov (napr. zmena mesta, kategórie alebo typu platby) nie sú pre analytické účely sledované a vždy sa pracuje s aktuálnou hodnotou.
+ - dim_date je typu SCD Typ 0, keďže dátumové atribúty (rok, mesiac, deň) sú nemenné a nemenia sa v čase.
+
 Prepojenie faktovej tabuľky a dimenzií
 Faktová tabuľka je centrom hviezdice, pričom každá dimenzia poskytuje kontext pre transakciu:
 cardholder_id → dim_cardholder
 merchant_id → dim_merchant
 payment_id → dim_payment
 transaction_date → dim_date
-
- - dim_cardholder je navrhnutá ako SCD Typ 1, keďže demografické a segmentačné údaje zákazníkov (napr. generácia alebo lokalita) sa môžu v čase meniť, no historické hodnoty v tomto projekte neuchovávame a pri zmene sú prepísané.
- - dim_merchant je taktiež SCD Typ 1, pretože zmeny názvu alebo kategórie obchodníka nie je potrebné historizovať.
- - dim_payment je SCD Typ 1, keďže typ platby a typ karty predstavujú aktuálny stav.
- - dim_date je SCD Typ 0, keďže dátumové atribúty (rok, mesiac, deň) sú nemenné a nevyžadujú aktualizácie.
 
 ![ Alt text](./img/2.png)
 
@@ -62,8 +63,9 @@ ELT proces pozostáva z troch hlavných fáz: extrahovanie (Extract), načítani
 
 **3.1 Extract (Extrahovanie dát)**
 
-Dáta zo zdrojového datasetu "Watercourses, Water Bodies, Rivers - Great Britain: Open Rivers" dostupného na Snowflake Marketplace som najprv sprístupnil prostredníctvom existujúcich view z marketplace. Pre každý typ dát (hydrologické uzly a vodné toky) som vytvoril staging tabuľky, ktoré slúžia ako dočasná pracovná vrstva pre čistenie a transformáciu.
+Dáta zo zdrojového datasetu „Credit/Debit Transactions: Fast Food and Quick Service Restaurants“, som sprístupnil prostredníctvom existujúceho view poskytovaného marketplace. Dataset obsahuje detailné informácie o kartových transakciách v segmente rýchleho občerstvenia (QSR), vrátane údajov o zákazníkoch, obchodníkoch, platbách a časových charakteristikách transakcií.
 
+Pre účely ďalšieho spracovania som vytvoril staging tabuľku, ktorá slúži ako dočasná pracovná vrstva pre načítanie surových dát bez transformácií.
 
 **Kód:**
 
