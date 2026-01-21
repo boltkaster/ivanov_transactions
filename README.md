@@ -253,10 +253,6 @@ FROM fact_transactions;
 ---
 ## **4 Vizualizácia dát**
 
-![ Alt text](./img/uk_waters.png)
-
----
-
 **Graf 1: Vývoj celkového obratu v čase**  
 Graf zobrazuje vývoj spotrebiteľských výdavkov v QSR segmente počas sledovaného obdobia. Je možné identifikovať rastové alebo poklesové trendy, sezónnosť a obdobia zvýšenej spotreby.
 ```sql
@@ -314,7 +310,7 @@ JOIN dim_cardholder c ON f.cardholder_id = c.cardholder_id
 GROUP BY c.card_holder_generation;
 
 ```
-![ Alt text](./img/graph4.png)
+![ Alt text](./img/graph5.png)
 
 ---
 
