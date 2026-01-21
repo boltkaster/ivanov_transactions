@@ -331,6 +331,6 @@ FROM fact_transactions
 GROUP BY transaction_sequence_number
 ORDER BY transaction_sequence_number;
 ```
-![ Alt text](./img/graph5.png)
+![ Alt text](./img/graph55.png)
 
 **Autor:** Volodymyr Ivanov
