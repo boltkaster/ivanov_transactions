@@ -288,7 +288,7 @@ GROUP BY m.merchant_name
 ORDER BY total_revenue DESC
 LIMIT 10;
 ```
-![ Alt text](./img/graph2.png)
+![ Alt text](./img/22.png)
 
 ---
 
