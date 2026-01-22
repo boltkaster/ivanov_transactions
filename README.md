@@ -226,7 +226,7 @@ SELECT DISTINCT
     merchant_postal_code
 FROM dim_merchant;
 
-
+-- Dimenzia Payment
 CREATE OR REPLACE TABLE dim_payment AS
 SELECT DISTINCT
     payment_id,
